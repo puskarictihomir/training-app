@@ -1,7 +1,11 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const PORT = 4001;
+
+const mongoose = require("mongoose");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -14,6 +18,14 @@ app.use(function (req, res, next) {
 
 app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
+});
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("connected to mongodb");
 });
 
 server.listen(PORT, console.log(`Listening on port: ${PORT}`));
