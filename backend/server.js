@@ -7,6 +7,9 @@ const PORT = 4001;
 
 const mongoose = require("mongoose");
 
+const indexRouter = require("./routes/index");
+const cors = require("cors");
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -16,9 +19,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
+app.use(cors());
+
+app.use("/api", indexRouter);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
