@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 
 import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -6,7 +7,7 @@ import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import axios from "axios";
 
 const TrainingForm = () => {
-  const [formData, setFormData] = React.useState([]);
+  const [formData, setFormData] = useState([]);
 
   const handleAddExercise = () => {
     setFormData([...formData, { name: "", sets: "", reps: "" }]);
@@ -24,12 +25,9 @@ const TrainingForm = () => {
   };
 
   const handleSubmit = () => {
-    axios
-      .post("http://localhost:4001/api/create", formData)
-      .then(() => console.log("Form data sent"))
-      .catch((err) => {
-        console.error(err);
-      });
+    axios.post("http://localhost:4001/api/create", formData).catch((err) => {
+      console.error(err);
+    });
 
     setFormData([]);
   };
