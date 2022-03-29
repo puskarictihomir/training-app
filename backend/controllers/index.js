@@ -1,5 +1,6 @@
 const Training = require("../models/training");
 const Exercise = require("../models/exercise");
+const User = require("../models/user");
 
 exports.getTrainings = async (req, res) => {
   const trainings = await Training.find({});
@@ -27,7 +28,20 @@ exports.createTraining = async (req, res) => {
 
     res.send({ statusCode: 200 });
   } catch (error) {
-    console.error("create_training", error);
+    console.error("createTraining", error);
+    res.send({ error: "Something went wrong" });
+  }
+};
+
+exports.registerUser = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    await User.create({ username, password });
+
+    res.send({ statusCode: 200 });
+  } catch (error) {
+    console.error("registerUser", error);
     res.send({ error: "Something went wrong" });
   }
 };

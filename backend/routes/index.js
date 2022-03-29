@@ -7,4 +7,6 @@ router.get("/", index.getTrainings);
 
 router.post("/create", index.createTraining);
 
+router.post("/register", index.registerUser);
+
 module.exports = router;
