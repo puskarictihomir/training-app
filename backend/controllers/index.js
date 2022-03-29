@@ -1,13 +1,13 @@
 const Training = require("../models/training");
 const Exercise = require("../models/exercise");
 
-exports.get_trainings = async (req, res) => {
+exports.getTrainings = async (req, res) => {
   const trainings = await Training.find({});
 
   res.send(trainings);
 };
 
-exports.create_training = async (req, res) => {
+exports.createTraining = async (req, res) => {
   try {
     const { body } = req;
 

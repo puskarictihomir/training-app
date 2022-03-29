@@ -3,8 +3,8 @@ const router = express.Router();
 
 const index = require("../controllers/index");
 
-router.get("/", index.get_trainings);
+router.get("/", index.getTrainings);
 
-router.post("/create", index.create_training);
+router.post("/create", index.createTraining);
 
 module.exports = router;
