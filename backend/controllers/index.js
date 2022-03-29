@@ -37,9 +37,14 @@ exports.registerUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    await User.create({ username, password });
+    const existingUser = await User.find({ username });
 
-    res.send({ statusCode: 200 });
+    if (existingUser.length === 0) {
+      await User.create({ username, password });
+      res.send({ statusCode: 200 });
+    } else {
+      res.send({ statusCode: 409 });
+    }
   } catch (error) {
     console.error("registerUser", error);
     res.send({ error: "Something went wrong" });

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, FormLabel, Input, FormControl, Button, Center } from "@chakra-ui/react";
+import { Box, FormLabel, Input, FormControl, Button, Center, useToast, Heading } from "@chakra-ui/react";
 
 import axios from "axios";
 
@@ -10,6 +10,8 @@ const RegisterForm = () => {
 
   const navigate = useNavigate();
 
+  const toast = useToast();
+
   const sumbmitDiasbled = formData.username.length && formData.password.length ? false : true;
 
   const handleSubmit = () => {
@@ -17,14 +19,20 @@ const RegisterForm = () => {
       .post("http://localhost:4001/api/register", formData)
       .then(function (response) {
         if (response.data.statusCode === 200) {
-          navigate("/");
+          navigate("/login");
+        } else if (response.data.statusCode === 409) {
+          toast({
+            title: "Korisničko ime zauzeto.",
+            description: "",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
         }
       })
       .catch((err) => {
         console.error(err);
       });
-
-    setFormData({ username: "", password: "" });
   };
 
   const handleChange = (event) => {
@@ -37,7 +45,10 @@ const RegisterForm = () => {
   };
 
   return (
-    <Center textAlign="center">
+    <Center flexDirection="column" textAlign="center">
+      <Heading mb={12} display="block">
+        Registracija
+      </Heading>
       <FormControl maxW="500px">
         <Box mb={4}>
           <FormLabel textAlign="center" htmlFor="username">
