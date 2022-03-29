@@ -2,6 +2,10 @@ const Training = require("../models/training");
 const Exercise = require("../models/exercise");
 const User = require("../models/user");
 
+const bycrypt = require("bcrypt");
+
+const { createToken } = require("../utils/createToken");
+
 exports.getTrainings = async (req, res) => {
   const trainings = await Training.find({});
 
@@ -48,5 +52,36 @@ exports.registerUser = async (req, res) => {
   } catch (error) {
     console.error("registerUser", error);
     res.send({ error: "Something went wrong" });
+  }
+};
+
+exports.login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await User.find({ username });
+
+    if (user.length === 0) {
+      return res.send({ statusCode: 404 });
+    }
+
+    bycrypt.compare(password, user[0].password, async function (err, result) {
+      if (result) {
+        const { username, _id: userId } = user[0];
+
+        /* kreiraj token i pošalji ga na front */
+
+        const token = createToken();
+
+        await User.updateOne({ _id: userId }, { token });
+
+        res.send({ statusCode: 200, data: { username, userId, token } });
+      } else {
+        res.send({ statusCode: 401 });
+      }
+    });
+  } catch (error) {
+    console.log("user_login_post", error);
+    res.send({ errorMessage: "Something went wrong" });
   }
 };

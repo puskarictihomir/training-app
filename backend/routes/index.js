@@ -9,4 +9,6 @@ router.post("/create", index.createTraining);
 
 router.post("/register", index.registerUser);
 
+router.post("/login", index.login);
+
 module.exports = router;
