@@ -8,6 +8,8 @@ import axios from "axios";
 const TrainingForm = () => {
   const [formData, setFormData] = useState([]);
 
+  const token = localStorage.getItem("token");
+
   const handleAddExercise = () => {
     setFormData([...formData, { name: "", sets: "", reps: "" }]);
   };
@@ -24,7 +26,7 @@ const TrainingForm = () => {
   };
 
   const handleSubmit = () => {
-    axios.post("http://localhost:4001/api/create", formData).catch((err) => {
+    axios.post(`http://localhost:4001/api/create?token=${token}`, formData).catch((err) => {
       console.error(err);
     });
 

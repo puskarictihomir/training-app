@@ -7,7 +7,7 @@ const bycrypt = require("bcrypt");
 const { createToken } = require("../utils/createToken");
 
 exports.getTrainings = async (req, res) => {
-  const trainings = await Training.find({});
+  const trainings = await Training.find({ user: req.user._id });
 
   res.send(trainings);
 };
@@ -27,7 +27,7 @@ exports.createTraining = async (req, res) => {
     }
 
     if (exerciseIds.length) {
-      await Training.create({ exercises: exerciseIds });
+      const training = await Training.create({ exercises: exerciseIds, user: req.user._id });
     }
 
     res.send({ statusCode: 200 });
@@ -68,8 +68,6 @@ exports.login = async (req, res) => {
     bycrypt.compare(password, user[0].password, async function (err, result) {
       if (result) {
         const { username, _id: userId } = user[0];
-
-        /* kreiraj token i pošalji ga na front */
 
         const token = createToken();
 

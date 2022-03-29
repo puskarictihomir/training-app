@@ -7,9 +7,11 @@ import axios from "axios";
 const TrainingsList = () => {
   const [trainings, setTrainings] = useState(null);
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     axios
-      .get("http://localhost:4001/api")
+      .get(`http://localhost:4001/api?token=${token}`)
       .then(function (response) {
         setTrainings(response.data);
       })
@@ -18,7 +20,7 @@ const TrainingsList = () => {
       });
   }, []);
 
-  if (trainings) {
+  if (trainings?.length) {
     return (
       <Box>
         {trainings.map((t, i) => {

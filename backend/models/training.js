@@ -9,6 +9,10 @@ const TrainingSchema = new Schema({
       ref: "Exercise",
     },
   ],
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 module.exports = mongoose.model("Training", TrainingSchema);

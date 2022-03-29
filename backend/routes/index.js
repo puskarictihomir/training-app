@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const index = require("../controllers/index");
+const getUserDataMiddleware = require("../middleware/getUserDataMiddleware");
 
-router.get("/", index.getTrainings);
+router.get("/", getUserDataMiddleware, index.getTrainings);
 
-router.post("/create", index.createTraining);
+router.post("/create", getUserDataMiddleware, index.createTraining);
 
 router.post("/register", index.registerUser);
 
