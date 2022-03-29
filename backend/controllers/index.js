@@ -14,11 +14,11 @@ exports.getTrainings = async (req, res) => {
 
 exports.createTraining = async (req, res) => {
   try {
-    const { body } = req;
+    const { formData, time } = req.body;
 
     const exerciseIds = [];
 
-    for (const b of body) {
+    for (const b of formData) {
       const exercise = await Exercise.create(b);
 
       if (exercise._id) {
@@ -26,8 +26,26 @@ exports.createTraining = async (req, res) => {
       }
     }
 
+    /*  const now = new Date();
+
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const day = now.getDay();
+    const hour = time.startTime.substring(0, 2);
+    const minute = time.startTime.substring(3, 5);
+
+    const nowDateTime = new Date(year, month, day, hour, minute);
+
+    console.log("nowDateTime", nowDateTime);
+    return; */
+
     if (exerciseIds.length) {
-      const training = await Training.create({ exercises: exerciseIds, user: req.user._id });
+      const training = await Training.create({
+        exercises: exerciseIds,
+        user: req.user._id,
+        /*  startTime: time.startTime,
+        endTime: time.endTime, */
+      });
     }
 
     res.send({ statusCode: 200 });

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
-import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button } from "@chakra-ui/react";
+import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button, Flex } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 
 const TrainingForm = () => {
   const [formData, setFormData] = useState([]);
+  const [time, setTime] = useState({ startTime: "", endTime: "" });
 
   const token = localStorage.getItem("token");
 
@@ -25,8 +26,17 @@ const TrainingForm = () => {
     setFormData(newFormData);
   };
 
+  const handleTimeChange = (event) => {
+    const { name, value } = event.target;
+
+    setTime((time) => ({
+      ...time,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = () => {
-    axios.post(`http://localhost:4001/api/create?token=${token}`, formData).catch((err) => {
+    axios.post(`http://localhost:4001/api/create?token=${token}`, { formData, time }).catch((err) => {
       console.error(err);
     });
 
@@ -35,7 +45,30 @@ const TrainingForm = () => {
 
   return (
     <FormControl>
+      <Flex>
+        <Box mr={4} maxW="220px" mb={4}>
+          <FormLabel htmlFor="startTime">Vrijeme početka</FormLabel>
+          <Input
+            id="startTime"
+            type="time"
+            name="startTime"
+            value={time.startTime}
+            onChange={(event) => handleTimeChange(event)}
+          />
+        </Box>
+        <Box maxW="220px" mb={4}>
+          <FormLabel htmlFor="endTime">Vrijeme završetka</FormLabel>
+          <Input
+            id="endTime"
+            type="time"
+            name="endTime"
+            value={time.endTime}
+            onChange={(event) => handleTimeChange(event)}
+          />
+        </Box>
+      </Flex>
       <IconButton mb={4} icon={<AddIcon />} colorScheme="blue" aria-label="Dodaj vježbu" onClick={handleAddExercise} />
+
       <Grid templateColumns="repeat(4, 1fr)">
         {formData.map((el, i) => {
           return (
