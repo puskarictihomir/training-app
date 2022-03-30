@@ -55,7 +55,6 @@ const TrainingForm = () => {
     axios
       .post(`http://localhost:4001/api/create`, { exercises, trainingTime }, { headers: { Authorization: token } })
       .then(function (response) {
-        console.log("response", response);
         if (response.data.statusCode === 200) {
           navigate("/");
         } else {
