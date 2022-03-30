@@ -14,12 +14,16 @@ exports.getTrainings = async (req, res) => {
 
 exports.createTraining = async (req, res) => {
   try {
-    const { formData, time } = req.body;
+    const { exercises, time } = req.body;
+
+    if (!exercises.filter((e) => e.name && e.sets && e.reps).length) {
+      res.send({ statusCode: 500 });
+    }
 
     const exerciseIds = [];
 
-    for (const b of formData) {
-      const exercise = await Exercise.create(b);
+    for (const e of exercises) {
+      const exercise = await Exercise.create(e);
 
       if (exercise._id) {
         exerciseIds.push(exercise._id);

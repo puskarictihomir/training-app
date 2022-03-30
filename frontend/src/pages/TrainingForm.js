@@ -8,7 +8,7 @@ import axios from "axios";
 
 const TrainingForm = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState([]);
+  const [exercises, setExercises] = useState([]);
   const [time, setTime] = useState({ startTime: "", endTime: "" });
 
   const token = localStorage.getItem("token");
@@ -16,18 +16,18 @@ const TrainingForm = () => {
   const toast = useToast();
 
   const handleAddExercise = () => {
-    setFormData([...formData, { name: "", sets: "", reps: "" }]);
+    setExercises([...exercises, { name: "", sets: "", reps: "" }]);
   };
 
   const handleDeleteExercise = (i) => {
-    setFormData(formData.filter((_, ind) => ind !== i));
+    setExercises(exercises.filter((_, ind) => ind !== i));
   };
 
   const handleChange = (event, i) => {
-    let newFormData = [...formData];
-    newFormData[i][event.target.name] = event.target.value;
+    let newExercises = [...exercises];
+    newExercises[i][event.target.name] = event.target.value;
 
-    setFormData(newFormData);
+    setExercises(newExercises);
   };
 
   const handleTimeChange = (event) => {
@@ -40,8 +40,20 @@ const TrainingForm = () => {
   };
 
   const handleSubmit = () => {
+    if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length) {
+      toast({
+        title: "Nedostaju podaci o vježbi",
+        description: "Da bi ste spremili trening, unesite ime vježbe, broj setova i broj ponavljanja.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+
+      return;
+    }
+
     axios
-      .post(`http://localhost:4001/api/create`, { formData, time }, { headers: { Authorization: token } })
+      .post(`http://localhost:4001/api/create`, { exercises, time }, { headers: { Authorization: token } })
       .then(function (response) {
         console.log("response", response);
         if (response.data.statusCode === 200) {
@@ -88,7 +100,7 @@ const TrainingForm = () => {
       <IconButton mb={4} icon={<AddIcon />} colorScheme="blue" aria-label="Dodaj vježbu" onClick={handleAddExercise} />
 
       <Grid templateColumns="repeat(4, 1fr)">
-        {formData.map((el, i) => {
+        {exercises.map((el, i) => {
           return (
             <Box key={i} mb={12} maxW="320px">
               <Box mb={4}>
@@ -127,7 +139,7 @@ const TrainingForm = () => {
           );
         })}
       </Grid>
-      <Button isDisabled={formData.length ? false : true} colorScheme="blue" onClick={handleSubmit}>
+      <Button isDisabled={exercises.length ? false : true} colorScheme="blue" onClick={handleSubmit}>
         Spremi
       </Button>
     </FormControl>
