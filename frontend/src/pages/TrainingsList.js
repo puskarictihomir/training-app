@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, useToast } from "@chakra-ui/react";
+import { Box, useToast, Spinner } from "@chakra-ui/react";
 
 import axios from "axios";
 
@@ -42,7 +42,11 @@ const TrainingsList = () => {
     );
   }
 
-  return "Nema spremljenih treninga";
+  if (trainings && trainings.length === 0) {
+    return "Nema spremljenih treninga";
+  }
+
+  return <Spinner />;
 };
 
 export default TrainingsList;
