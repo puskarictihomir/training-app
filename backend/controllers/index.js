@@ -51,9 +51,9 @@ exports.registerUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const existingUser = await User.find({ username });
+    const existingUser = await User.findOne({ username });
 
-    if (existingUser.length === 0) {
+    if (!existingUser) {
       await User.create({ username, password });
       res.send({ statusCode: 200 });
     } else {
@@ -69,15 +69,17 @@ exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.find({ username });
+    const user = await User.findOne({ username });
 
-    if (user.length === 0) {
+    if (!user) {
       return res.send({ statusCode: 404 });
     }
 
-    bycrypt.compare(password, user[0].password, async function (err, result) {
+    bycrypt.compare(password, user.password, async function (err, result) {
+      if (err) return err;
+
       if (result) {
-        const { username, _id: userId } = user[0];
+        const { username, _id: userId } = user;
 
         const token = createToken();
 
