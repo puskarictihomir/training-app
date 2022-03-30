@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Box, useToast, Spinner, Text } from "@chakra-ui/react";
 
 import axios from "axios";
 
 import LoggedInNav from "../components/LoggedInNav";
+import LoggedOutNav from "../components/LoggedOutNav";
 
 const TrainingsList = () => {
   const [trainings, setTrainings] = useState(null);
 
-  const navigate = useNavigate();
+  let token = "";
+
+  if (document.cookie) {
+    token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      .split("=")[1];
+  }
 
   const toast = useToast();
-
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    navigate("/login");
-  }
 
   useEffect(() => {
     axios
@@ -40,6 +41,15 @@ const TrainingsList = () => {
         console.log(error);
       });
   }, []);
+
+  if (!token) {
+    return (
+      <Box>
+        <LoggedOutNav />
+        <Text>Prijavi se da bi vidio ovu stranicu</Text>
+      </Box>
+    );
+  }
 
   if (trainings) {
     return (

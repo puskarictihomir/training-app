@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button, useToast } from "@chakra-ui/react";
+import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button, useToast, Text } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 
 import LoggedInNav from "../components/LoggedInNav";
+import LoggedOutNav from "../components/LoggedOutNav";
 
 const TrainingForm = () => {
   const navigate = useNavigate();
   const [exercises, setExercises] = useState([]);
   const [trainingTime, setTrainingTime] = useState({ startTime: "", endTime: "" });
 
-  const token = localStorage.getItem("token");
+  let token = "";
 
-  if (!token) {
-    navigate("/login");
+  if (document.cookie) {
+    token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      .split("=")[1];
   }
 
   const toast = useToast();
@@ -81,6 +85,15 @@ const TrainingForm = () => {
         console.error(err);
       });
   };
+
+  if (!token) {
+    return (
+      <Box>
+        <LoggedOutNav />
+        <Text>Prijavi se da bi vidio ovu stranicu</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box>

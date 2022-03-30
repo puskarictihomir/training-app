@@ -4,7 +4,7 @@ import { Grid } from "@chakra-ui/react";
 
 const LoggedInNav = () => {
   const deleteToken = () => {
-    localStorage.removeItem("token");
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
   };
 
   return (

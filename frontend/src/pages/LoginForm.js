@@ -17,7 +17,7 @@ const LoginForm = () => {
       .post(`${process.env.REACT_APP_BASE_URL}/api/login`, { username, password })
       .then(function (response) {
         if (response.data.statusCode === 200) {
-          localStorage.setItem("token", response.data.data.token);
+          document.cookie = "token=" + response.data.data.token;
           navigate("/");
         } else if (response.data.statusCode === 404 || response.data.statusCode === 401) {
           toast({
