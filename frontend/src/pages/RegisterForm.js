@@ -1,22 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, FormLabel, Input, FormControl, Button, Center, useToast, Heading } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 import axios from "axios";
 
-const RegisterForm = () => {
-  const [formData, setFormData] = useState({ username: "", password: "" });
+import AuthForm from "../components/AuthForm";
 
+const RegisterForm = () => {
   const navigate = useNavigate();
 
   const toast = useToast();
 
-  const sumbmitDiasbled = formData.username.length && formData.password.length ? false : true;
-
-  const handleSubmit = () => {
+  const handleSubmit = (username, password) => {
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/api/register`, formData)
+      .post(`${process.env.REACT_APP_BASE_URL}/api/register`, { username, password })
       .then(function (response) {
         if (response.data.statusCode === 200) {
           navigate("/login");
@@ -35,52 +33,7 @@ const RegisterForm = () => {
       });
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-
-    setFormData((formData) => ({
-      ...formData,
-      [name]: value,
-    }));
-  };
-
-  return (
-    <Center flexDirection="column" textAlign="center">
-      <Heading mb={12} display="block">
-        Registracija
-      </Heading>
-      <FormControl maxW="500px">
-        <Box mb={4}>
-          <FormLabel textAlign="center" htmlFor="username">
-            Korisničko ime
-          </FormLabel>
-          <Input
-            id="username"
-            name="username"
-            type="text"
-            value={formData.username}
-            onChange={(event) => handleChange(event)}
-          />
-        </Box>
-        <Box mb={4}>
-          <FormLabel textAlign="center" htmlFor="password">
-            Lozinka
-          </FormLabel>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={(event) => handleChange(event)}
-          />
-        </Box>
-
-        <Button isDisabled={sumbmitDiasbled} colorScheme="blue" onClick={handleSubmit}>
-          Spremi
-        </Button>
-      </FormControl>
-    </Center>
-  );
+  return <AuthForm handleSubmit={handleSubmit} title="Registracija" />;
 };
 
 export default RegisterForm;
