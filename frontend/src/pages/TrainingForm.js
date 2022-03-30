@@ -1,15 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button, Flex, useToast } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 
 const TrainingForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState([]);
   const [time, setTime] = useState({ startTime: "", endTime: "" });
 
   const token = localStorage.getItem("token");
+
+  const toast = useToast();
 
   const handleAddExercise = () => {
     setFormData([...formData, { name: "", sets: "", reps: "" }]);
@@ -36,11 +40,25 @@ const TrainingForm = () => {
   };
 
   const handleSubmit = () => {
-    axios.post(`http://localhost:4001/api/create?token=${token}`, { formData, time }).catch((err) => {
-      console.error(err);
-    });
-
-    setFormData([]);
+    axios
+      .post(`http://localhost:4001/api/create`, { formData, time }, { headers: { Authorization: token } })
+      .then(function (response) {
+        console.log("response", response);
+        if (response.data.statusCode === 200) {
+          navigate("/");
+        } else {
+          toast({
+            title: "Nešto je pošlo po zlu.",
+            description: "",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (

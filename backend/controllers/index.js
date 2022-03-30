@@ -9,7 +9,7 @@ const { createToken } = require("../utils/createToken");
 exports.getTrainings = async (req, res) => {
   const trainings = await Training.find({ user: req.user._id });
 
-  res.send(trainings);
+  res.send({ trainings, statusCode: 200 });
 };
 
 exports.createTraining = async (req, res) => {
@@ -26,25 +26,10 @@ exports.createTraining = async (req, res) => {
       }
     }
 
-    /*  const now = new Date();
-
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const day = now.getDay();
-    const hour = time.startTime.substring(0, 2);
-    const minute = time.startTime.substring(3, 5);
-
-    const nowDateTime = new Date(year, month, day, hour, minute);
-
-    console.log("nowDateTime", nowDateTime);
-    return; */
-
     if (exerciseIds.length) {
       const training = await Training.create({
         exercises: exerciseIds,
         user: req.user._id,
-        /*  startTime: time.startTime,
-        endTime: time.endTime, */
       });
     }
 
