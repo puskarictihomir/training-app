@@ -13,8 +13,9 @@ const TrainingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  startTime: Date,
-  endTime: Date,
+  startTime: Number,
+  endTime: Number,
+  created_at: { type: Date, default: Date.now() },
 });
 
 module.exports = mongoose.model("Training", TrainingSchema);

@@ -9,7 +9,7 @@ import axios from "axios";
 const TrainingForm = () => {
   const navigate = useNavigate();
   const [exercises, setExercises] = useState([]);
-  const [time, setTime] = useState({ startTime: "", endTime: "" });
+  const [trainingTime, setTrainingTime] = useState({ startTime: "", endTime: "" });
 
   const token = localStorage.getItem("token");
 
@@ -33,17 +33,17 @@ const TrainingForm = () => {
   const handleTimeChange = (event) => {
     const { name, value } = event.target;
 
-    setTime((time) => ({
-      ...time,
+    setTrainingTime((trainingTime) => ({
+      ...trainingTime,
       [name]: value,
     }));
   };
 
   const handleSubmit = () => {
-    if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length) {
+    if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length || !trainingTime.startTime) {
       toast({
         title: "Nedostaju podaci o vježbi",
-        description: "Da bi ste spremili trening, unesite ime vježbe, broj setova i broj ponavljanja.",
+        description: "Da bi ste spremili trening, unesite ime vježbe, broj setova, broj ponavljanja i vrijeme početka.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -53,7 +53,7 @@ const TrainingForm = () => {
     }
 
     axios
-      .post(`http://localhost:4001/api/create`, { exercises, time }, { headers: { Authorization: token } })
+      .post(`http://localhost:4001/api/create`, { exercises, trainingTime }, { headers: { Authorization: token } })
       .then(function (response) {
         console.log("response", response);
         if (response.data.statusCode === 200) {
@@ -75,28 +75,17 @@ const TrainingForm = () => {
 
   return (
     <FormControl>
-      <Flex>
-        <Box mr={4} maxW="220px" mb={4}>
-          <FormLabel htmlFor="startTime">Vrijeme početka</FormLabel>
-          <Input
-            id="startTime"
-            type="time"
-            name="startTime"
-            value={time.startTime}
-            onChange={(event) => handleTimeChange(event)}
-          />
-        </Box>
-        <Box maxW="220px" mb={4}>
-          <FormLabel htmlFor="endTime">Vrijeme završetka</FormLabel>
-          <Input
-            id="endTime"
-            type="time"
-            name="endTime"
-            value={time.endTime}
-            onChange={(event) => handleTimeChange(event)}
-          />
-        </Box>
-      </Flex>
+      <Box mr={4} maxW="220px" mb={4}>
+        <FormLabel htmlFor="startTime">Vrijeme početka</FormLabel>
+        <Input
+          id="startTime"
+          type="datetime-local"
+          name="startTime"
+          value={trainingTime.startTime}
+          onChange={(event) => handleTimeChange(event)}
+        />
+      </Box>
+
       <IconButton mb={4} icon={<AddIcon />} colorScheme="blue" aria-label="Dodaj vježbu" onClick={handleAddExercise} />
 
       <Grid templateColumns="repeat(4, 1fr)">

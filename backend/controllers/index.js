@@ -3,6 +3,7 @@ const Exercise = require("../models/exercise");
 const User = require("../models/user");
 
 const bycrypt = require("bcrypt");
+const dayjs = require("dayjs");
 
 const { createToken } = require("../utils/createToken");
 
@@ -14,7 +15,7 @@ exports.getTrainings = async (req, res) => {
 
 exports.createTraining = async (req, res) => {
   try {
-    const { exercises, time } = req.body;
+    const { exercises, trainingTime } = req.body;
 
     if (!exercises.filter((e) => e.name && e.sets && e.reps).length) {
       res.send({ statusCode: 500 });
@@ -34,6 +35,8 @@ exports.createTraining = async (req, res) => {
       const training = await Training.create({
         exercises: exerciseIds,
         user: req.user._id,
+        startTime: +dayjs(trainingTime.startTime),
+        endTime: Date.now(),
       });
     }
 
