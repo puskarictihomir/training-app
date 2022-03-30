@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button, Flex, useToast } from "@chakra-ui/react";
+import { Box, FormLabel, Input, FormControl, IconButton, Grid, Button, useToast } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
+
+import LoggedInNav from "../components/LoggedInNav";
 
 const TrainingForm = () => {
   const navigate = useNavigate();
@@ -12,6 +14,10 @@ const TrainingForm = () => {
   const [trainingTime, setTrainingTime] = useState({ startTime: "", endTime: "" });
 
   const token = localStorage.getItem("token");
+
+  if (!token) {
+    navigate("/login");
+  }
 
   const toast = useToast();
 
@@ -77,64 +83,73 @@ const TrainingForm = () => {
   };
 
   return (
-    <FormControl>
-      <Box mr={4} maxW="220px" mb={4}>
-        <FormLabel htmlFor="startTime">Vrijeme početka</FormLabel>
-        <Input
-          id="startTime"
-          type="datetime-local"
-          name="startTime"
-          value={trainingTime.startTime}
-          onChange={(event) => handleTimeChange(event)}
+    <Box>
+      <LoggedInNav />
+      <FormControl>
+        <Box mr={4} maxW="220px" mb={4}>
+          <FormLabel htmlFor="startTime">Vrijeme početka</FormLabel>
+          <Input
+            id="startTime"
+            type="datetime-local"
+            name="startTime"
+            value={trainingTime.startTime}
+            onChange={(event) => handleTimeChange(event)}
+          />
+        </Box>
+
+        <IconButton
+          mb={4}
+          icon={<AddIcon />}
+          colorScheme="blue"
+          aria-label="Dodaj vježbu"
+          onClick={handleAddExercise}
         />
-      </Box>
 
-      <IconButton mb={4} icon={<AddIcon />} colorScheme="blue" aria-label="Dodaj vježbu" onClick={handleAddExercise} />
+        <Grid templateColumns="repeat(4, 1fr)">
+          {exercises.map((el, i) => {
+            return (
+              <Box key={i} mb={12} maxW="320px">
+                <Box mb={4}>
+                  <FormLabel htmlFor={`name${i}`}>Ime vježbe</FormLabel>
+                  <Input
+                    id={`name${i}`}
+                    name="name"
+                    type="text"
+                    value={el.name}
+                    onChange={(event) => handleChange(event, i)}
+                  />
+                </Box>
+                <Box mb={4}>
+                  <FormLabel htmlFor={`sets${i}`}>Broj setova</FormLabel>
+                  <Input
+                    id={`sets${i}`}
+                    name="sets"
+                    type="number"
+                    value={el.sets}
+                    onChange={(event) => handleChange(event, i)}
+                  />
+                </Box>
+                <Box mb={4}>
+                  <FormLabel htmlFor={`reps${i}`}>Broj ponavljanja u setu</FormLabel>
+                  <Input
+                    id={`reps${i}`}
+                    type="number"
+                    value={el.reps}
+                    name="reps"
+                    onChange={(event) => handleChange(event, i)}
+                  />
+                </Box>
 
-      <Grid templateColumns="repeat(4, 1fr)">
-        {exercises.map((el, i) => {
-          return (
-            <Box key={i} mb={12} maxW="320px">
-              <Box mb={4}>
-                <FormLabel htmlFor={`name${i}`}>Ime vježbe</FormLabel>
-                <Input
-                  id={`name${i}`}
-                  name="name"
-                  type="text"
-                  value={el.name}
-                  onChange={(event) => handleChange(event, i)}
-                />
+                <IconButton icon={<DeleteIcon />} colorScheme="red" onClick={() => handleDeleteExercise(i)} />
               </Box>
-              <Box mb={4}>
-                <FormLabel htmlFor={`sets${i}`}>Broj setova</FormLabel>
-                <Input
-                  id={`sets${i}`}
-                  name="sets"
-                  type="number"
-                  value={el.sets}
-                  onChange={(event) => handleChange(event, i)}
-                />
-              </Box>
-              <Box mb={4}>
-                <FormLabel htmlFor={`reps${i}`}>Broj ponavljanja u setu</FormLabel>
-                <Input
-                  id={`reps${i}`}
-                  type="number"
-                  value={el.reps}
-                  name="reps"
-                  onChange={(event) => handleChange(event, i)}
-                />
-              </Box>
-
-              <IconButton icon={<DeleteIcon />} colorScheme="red" onClick={() => handleDeleteExercise(i)} />
-            </Box>
-          );
-        })}
-      </Grid>
-      <Button isDisabled={exercises.length ? false : true} colorScheme="blue" onClick={handleSubmit}>
-        Spremi
-      </Button>
-    </FormControl>
+            );
+          })}
+        </Grid>
+        <Button isDisabled={exercises.length ? false : true} colorScheme="blue" onClick={handleSubmit}>
+          Spremi
+        </Button>
+      </FormControl>
+    </Box>
   );
 };
 

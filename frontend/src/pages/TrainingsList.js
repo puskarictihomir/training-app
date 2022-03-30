@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Box, useToast, Spinner } from "@chakra-ui/react";
+import { Box, useToast, Spinner, Text } from "@chakra-ui/react";
 
 import axios from "axios";
+
+import LoggedInNav from "../components/LoggedInNav";
 
 const TrainingsList = () => {
   const [trainings, setTrainings] = useState(null);
 
+  const navigate = useNavigate();
+
   const toast = useToast();
 
   const token = localStorage.getItem("token");
+
+  if (!token) {
+    navigate("/login");
+  }
 
   useEffect(() => {
     axios
@@ -32,21 +41,29 @@ const TrainingsList = () => {
       });
   }, []);
 
-  if (trainings?.length) {
+  if (trainings) {
     return (
       <Box>
-        {trainings.map((t, i) => {
-          return <Box key={i}>{t._id}</Box>;
-        })}
+        <LoggedInNav />
+        {trainings.length ? (
+          <Box>
+            {trainings.map((t, i) => {
+              return <Box key={i}>{t._id}</Box>;
+            })}
+          </Box>
+        ) : (
+          <Text>Nema spremljenih treninga</Text>
+        )}
       </Box>
     );
   }
 
-  if (trainings && trainings.length === 0) {
-    return "Nema spremljenih treninga";
-  }
-
-  return <Spinner />;
+  return (
+    <Box>
+      <LoggedInNav />
+      <Spinner />
+    </Box>
+  );
 };
 
 export default TrainingsList;
