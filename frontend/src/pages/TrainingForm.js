@@ -53,7 +53,11 @@ const TrainingForm = () => {
     }
 
     axios
-      .post(`http://localhost:4001/api/create`, { exercises, trainingTime }, { headers: { Authorization: token } })
+      .post(
+        `${process.env.REACT_APP_BASE_URL}/api/create`,
+        { exercises, trainingTime },
+        { headers: { Authorization: token } }
+      )
       .then(function (response) {
         if (response.data.statusCode === 200) {
           navigate("/");

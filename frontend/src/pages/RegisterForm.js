@@ -16,7 +16,7 @@ const RegisterForm = () => {
 
   const handleSubmit = () => {
     axios
-      .post("http://localhost:4001/api/register", formData)
+      .post(`${process.env.REACT_APP_BASE_URL}/api/register`, formData)
       .then(function (response) {
         if (response.data.statusCode === 200) {
           navigate("/login");

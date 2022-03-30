@@ -13,7 +13,7 @@ const TrainingsList = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4001/api`, { headers: { Authorization: token } })
+      .get(`${process.env.REACT_APP_BASE_URL}/api`, { headers: { Authorization: token } })
       .then(function (response) {
         if (response.data.statusCode === 200) {
           setTrainings(response.data.trainings);

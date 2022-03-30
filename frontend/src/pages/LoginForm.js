@@ -16,7 +16,7 @@ const LoginForm = () => {
 
   const handleSubmit = () => {
     axios
-      .post("http://localhost:4001/api/login", formData)
+      .post(`${process.env.REACT_APP_BASE_URL}/api/login`, formData)
       .then(function (response) {
         if (response.data.statusCode === 200) {
           localStorage.setItem("token", response.data.data.token);
