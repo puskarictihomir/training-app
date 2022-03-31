@@ -16,21 +16,32 @@ const LoginForm = () => {
     axios
       .post(`${process.env.REACT_APP_BASE_URL}/api/login`, { username, password })
       .then(function (response) {
-        if (response.data.statusCode === 200) {
-          document.cookie = "token=" + response.data.data.token;
-          navigate("/");
-        } else if (response.data.statusCode === 404 || response.data.statusCode === 401) {
+        if (response.status === 200) {
+          if (response.data.error) {
+            toast({
+              title: "Check input data.",
+              description: "Wrong username or password.",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          } else {
+            document.cookie = "token=" + response.data.token;
+            navigate("/");
+          }
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401 || err.response.status === 404) {
           toast({
-            title: "Check input data.",
-            description: "Wrong username or password.",
+            title: err.response.data.error,
+            description: "",
             status: "error",
             duration: 3000,
             isClosable: true,
           });
         }
-      })
-      .catch((err) => {
-        console.error(err);
+        console.error(err.response);
       });
   };
 

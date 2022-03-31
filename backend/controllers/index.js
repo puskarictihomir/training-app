@@ -10,7 +10,7 @@ const { createToken } = require("../utils/createToken");
 exports.getTrainings = async (req, res) => {
   const trainings = await Training.find({ user: req.user._id });
 
-  res.send({ trainings, statusCode: 200 });
+  res.send({ trainings });
 };
 
 exports.createTraining = async (req, res) => {
@@ -18,7 +18,7 @@ exports.createTraining = async (req, res) => {
     const { exercises, trainingTime } = req.body;
 
     if (!exercises.filter((e) => e.name && e.sets && e.reps).length) {
-      res.send({ statusCode: 500 });
+      return res.status(400).send({ error: "Missing data" });
     }
 
     const exerciseIds = [];
@@ -31,16 +31,14 @@ exports.createTraining = async (req, res) => {
       }
     }
 
-    if (exerciseIds.length) {
-      const training = await Training.create({
-        exercises: exerciseIds,
-        user: req.user._id,
-        startTime: +dayjs(trainingTime.startTime),
-        endTime: Date.now(),
-      });
-    }
+    const training = await Training.create({
+      exercises: exerciseIds,
+      user: req.user._id,
+      startTime: +dayjs(trainingTime.startTime),
+      endTime: Date.now(),
+    });
 
-    res.send({ statusCode: 200 });
+    return res.status(200).send({ msg: "Created training" });
   } catch (error) {
     console.error("createTraining", error);
     res.send({ error: "Something went wrong" });
@@ -55,9 +53,9 @@ exports.registerUser = async (req, res) => {
 
     if (!existingUser) {
       await User.create({ username, password });
-      res.send({ statusCode: 200 });
+      return res.status(200).send({ msg: "Registered" });
     } else {
-      res.send({ statusCode: 409 });
+      return res.status(409).send({ error: "Username taken" });
     }
   } catch (error) {
     console.error("registerUser", error);
@@ -72,7 +70,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.send({ statusCode: 404 });
+      return res.status(404).send({ error: "No such user" });
     }
 
     bycrypt.compare(password, user.password, async function (err, result) {
@@ -85,13 +83,13 @@ exports.login = async (req, res) => {
 
         await User.updateOne({ _id: userId }, { token });
 
-        res.send({ statusCode: 200, data: { username, userId, token } });
+        res.status(200).send({ username, userId, token });
       } else {
-        res.send({ statusCode: 401 });
+        res.status(401).send({ error: "Incorrect credentials" });
       }
     });
   } catch (error) {
-    console.log("user_login_post", error);
+    console.log("login", error);
     res.send({ errorMessage: "Something went wrong" });
   }
 };

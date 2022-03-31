@@ -69,19 +69,20 @@ const TrainingForm = () => {
         { headers: { Authorization: token } }
       )
       .then(function (response) {
-        if (response.data.statusCode === 200) {
+        if (response.status === 200) {
           navigate("/");
-        } else {
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
           toast({
-            title: "Something went wrong.",
+            title: "Missing data.",
             description: "",
             status: "error",
             duration: 3000,
             isClosable: true,
           });
         }
-      })
-      .catch((err) => {
         console.error(err);
       });
   };

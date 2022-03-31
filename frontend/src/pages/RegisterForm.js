@@ -16,9 +16,12 @@ const RegisterForm = () => {
     axios
       .post(`${process.env.REACT_APP_BASE_URL}/api/register`, { username, password })
       .then(function (response) {
-        if (response.data.statusCode === 200) {
+        if (response.status === 200) {
           navigate("/login");
-        } else if (response.data.statusCode === 409) {
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 409) {
           toast({
             title: "Username taken.",
             description: "",
@@ -27,8 +30,6 @@ const RegisterForm = () => {
             isClosable: true,
           });
         }
-      })
-      .catch((err) => {
         console.error(err);
       });
   };

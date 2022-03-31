@@ -25,7 +25,7 @@ const TrainingsList = () => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/api`, { headers: { Authorization: token } })
       .then(function (response) {
-        if (response.data.statusCode === 200) {
+        if (response.status === 200 && response.data?.trainings) {
           setTrainings(response.data.trainings);
         } else {
           toast({
