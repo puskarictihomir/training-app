@@ -21,8 +21,8 @@ const LoginForm = () => {
           navigate("/");
         } else if (response.data.statusCode === 404 || response.data.statusCode === 401) {
           toast({
-            title: "Provjerite unešene podatke.",
-            description: "Korisnik s unešenim podacima ne postoji.",
+            title: "Check input data.",
+            description: "Wrong username or password.",
             status: "error",
             duration: 3000,
             isClosable: true,
@@ -34,7 +34,7 @@ const LoginForm = () => {
       });
   };
 
-  return <AuthForm handleSubmit={handleSubmit} title="Prijava" />;
+  return <AuthForm handleSubmit={handleSubmit} title="Log in" />;
 };
 
 export default LoginForm;

@@ -9,10 +9,10 @@ const LoggedInNav = () => {
 
   return (
     <Grid templateColumns="repeat(3, 1fr)" mb={12}>
-      <Link to="/">Početna</Link>
-      <Link to="/create">Kreiraj trening</Link>
+      <Link to="/">Home</Link>
+      <Link to="/create">Add training</Link>
       <Link onClick={deleteToken} to="/login">
-        Odjava
+        Log out
       </Link>
     </Grid>
   );

@@ -6,8 +6,8 @@ const LoggedOutNav = () => {
   return (
     <Box m="50px">
       <Grid templateColumns="repeat(2, 1fr)" mb={12}>
-        <Link to="/register">Registracija</Link>
-        <Link to="/login">Prijava</Link>
+        <Link to="/register">Register</Link>
+        <Link to="/login">Log in</Link>
       </Grid>
     </Box>
   );

@@ -20,7 +20,7 @@ const RegisterForm = () => {
           navigate("/login");
         } else if (response.data.statusCode === 409) {
           toast({
-            title: "Korisničko ime zauzeto.",
+            title: "Username taken.",
             description: "",
             status: "error",
             duration: 3000,
@@ -33,7 +33,7 @@ const RegisterForm = () => {
       });
   };
 
-  return <AuthForm handleSubmit={handleSubmit} title="Registracija" />;
+  return <AuthForm handleSubmit={handleSubmit} title="Register" />;
 };
 
 export default RegisterForm;

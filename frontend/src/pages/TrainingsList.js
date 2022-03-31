@@ -29,7 +29,7 @@ const TrainingsList = () => {
           setTrainings(response.data.trainings);
         } else {
           toast({
-            title: "Nešto je pošlo po zlu.",
+            title: "Something went wrong.",
             description: "",
             status: "error",
             duration: 3000,
@@ -46,7 +46,7 @@ const TrainingsList = () => {
     return (
       <Box>
         <LoggedOutNav />
-        <Text>Prijavi se da bi vidio ovu stranicu</Text>
+        <Text>Sign in to see this page</Text>
       </Box>
     );
   }
@@ -62,7 +62,7 @@ const TrainingsList = () => {
             })}
           </Box>
         ) : (
-          <Text>Nema spremljenih treninga</Text>
+          <Text>No saved trainings</Text>
         )}
       </Box>
     );

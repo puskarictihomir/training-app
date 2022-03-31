@@ -52,8 +52,8 @@ const TrainingForm = () => {
   const handleSubmit = () => {
     if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length || !trainingTime.startTime) {
       toast({
-        title: "Nedostaju podaci o vježbi",
-        description: "Da bi ste spremili trening, unesite ime vježbe, broj setova, broj ponavljanja i vrijeme početka.",
+        title: "Missing exercise data",
+        description: "To save a training, input exercise name, reps, sets i start time.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -73,7 +73,7 @@ const TrainingForm = () => {
           navigate("/");
         } else {
           toast({
-            title: "Nešto je pošlo po zlu.",
+            title: "Something went wrong.",
             description: "",
             status: "error",
             duration: 3000,
@@ -90,7 +90,7 @@ const TrainingForm = () => {
     return (
       <Box>
         <LoggedOutNav />
-        <Text>Prijavi se da bi vidio ovu stranicu</Text>
+        <Text>Sign in to see this page</Text>
       </Box>
     );
   }
@@ -100,7 +100,7 @@ const TrainingForm = () => {
       <LoggedInNav />
       <FormControl>
         <Box mr={4} maxW="220px" mb={4}>
-          <FormLabel htmlFor="startTime">Vrijeme početka</FormLabel>
+          <FormLabel htmlFor="startTime">Start time</FormLabel>
           <Input
             id="startTime"
             type="datetime-local"
@@ -114,7 +114,7 @@ const TrainingForm = () => {
           mb={4}
           icon={<AddIcon />}
           colorScheme="blue"
-          aria-label="Dodaj vježbu"
+          aria-label="Add exercise"
           onClick={handleAddExercise}
         />
 
@@ -123,7 +123,7 @@ const TrainingForm = () => {
             return (
               <Box key={i} mb={12} maxW="320px">
                 <Box mb={4}>
-                  <FormLabel htmlFor={`name${i}`}>Ime vježbe</FormLabel>
+                  <FormLabel htmlFor={`name${i}`}>Exercise name</FormLabel>
                   <Input
                     id={`name${i}`}
                     name="name"
@@ -133,7 +133,7 @@ const TrainingForm = () => {
                   />
                 </Box>
                 <Box mb={4}>
-                  <FormLabel htmlFor={`sets${i}`}>Broj setova</FormLabel>
+                  <FormLabel htmlFor={`sets${i}`}>Sets</FormLabel>
                   <Input
                     id={`sets${i}`}
                     name="sets"
@@ -143,7 +143,7 @@ const TrainingForm = () => {
                   />
                 </Box>
                 <Box mb={4}>
-                  <FormLabel htmlFor={`reps${i}`}>Broj ponavljanja u setu</FormLabel>
+                  <FormLabel htmlFor={`reps${i}`}>Reps in a set</FormLabel>
                   <Input
                     id={`reps${i}`}
                     type="number"
@@ -159,7 +159,7 @@ const TrainingForm = () => {
           })}
         </Grid>
         <Button isDisabled={exercises.length ? false : true} colorScheme="blue" onClick={handleSubmit}>
-          Spremi
+          Save
         </Button>
       </FormControl>
     </Box>

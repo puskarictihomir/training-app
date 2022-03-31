@@ -32,7 +32,7 @@ const AuthForm = ({ handleSubmit, title }) => {
         <FormControl maxW="500px">
           <Box mb={4}>
             <FormLabel textAlign="center" htmlFor="username">
-              Korisničko ime
+              Username
             </FormLabel>
             <Input
               id="username"
@@ -44,7 +44,7 @@ const AuthForm = ({ handleSubmit, title }) => {
           </Box>
           <Box mb={4}>
             <FormLabel textAlign="center" htmlFor="password">
-              Lozinka
+              Password
             </FormLabel>
             <Input
               id="password"
@@ -56,7 +56,7 @@ const AuthForm = ({ handleSubmit, title }) => {
           </Box>
 
           <Button isDisabled={sumbmitDiasbled} colorScheme="blue" onClick={() => handleSubmit(username, password)}>
-            Spremi
+            {title}
           </Button>
         </FormControl>
       </Center>
