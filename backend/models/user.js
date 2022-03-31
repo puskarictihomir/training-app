@@ -8,7 +8,7 @@ const UserSchema = new Schema({
   username: String,
   password: String,
   token: String,
-  created_at: { type: Number, default: Date.now() },
+  createdAt: { type: Number, default: () => Date.now() },
 });
 
 UserSchema.pre("save", function (next) {
