@@ -99,3 +99,9 @@ exports.getTraining = async (req, res) => {
 
   res.send({ training });
 };
+
+exports.remove = async (req, res) => {
+  await Training.deleteOne({ _id: req.body.id });
+
+  res.send({ id: req.body.id });
+};

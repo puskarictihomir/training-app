@@ -14,4 +14,6 @@ router.post("/login", index.login);
 
 router.get("/:id", getUserDataMiddleware, index.getTraining);
 
+router.delete("/remove", getUserDataMiddleware, index.remove);
+
 module.exports = router;

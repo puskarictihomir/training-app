@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Box, useToast, Spinner, Text } from "@chakra-ui/react";
+import { Box, useToast, Spinner, Text, Flex, IconButton } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 
@@ -21,6 +22,19 @@ const TrainingsList = () => {
   }
 
   const toast = useToast();
+
+  const handleDeleteExercise = (id) => {
+    axios
+      .delete(`${process.env.REACT_APP_BASE_URL}/api/remove`, {
+        headers: { Authorization: token },
+        data: { id },
+      })
+      .then((response) => {
+        setTrainings(trainings.filter((t) => t._id !== response.data.id));
+        return response.data;
+      })
+      .catch((err) => console.log(err.message));
+  };
 
   useEffect(() => {
     axios
@@ -61,9 +75,13 @@ const TrainingsList = () => {
             {trainings.map((t, i) => {
               const date = new Date(t.createdAt);
               return (
-                <Box key={i}>
-                  <Link to={`/details/${t._id}`}>{date.toDateString("YYYY MM DD HH mm")}</Link>
-                </Box>
+                <Flex alignItems="center" mb={8} key={i}>
+                  <Box mr={4}>
+                    <Link to={`/details/${t._id}`}>{date.toDateString("YYYY MM DD HH mm")}</Link>
+                  </Box>
+
+                  <IconButton icon={<DeleteIcon />} colorScheme="red" onClick={() => handleDeleteExercise(t._id)} />
+                </Flex>
               );
             })}
           </Box>
