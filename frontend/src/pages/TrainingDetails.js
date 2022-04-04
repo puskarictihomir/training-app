@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Box, useToast, Spinner, Text } from "@chakra-ui/react";
+import { Box, useToast, Spinner, Text, Flex } from "@chakra-ui/react";
 
 import axios from "axios";
 
@@ -62,8 +62,20 @@ const TrainingDetails = () => {
         {!!training && (
           <Box>
             {training.exercises.map((e, i) => {
-              const date = new Date(e.createdAt);
-              return <Box key={i}>{e.name}</Box>;
+              return (
+                <Box key={i}>
+                  <Flex justifyContent="space-around">
+                    <Text>Ime vježbe</Text>
+                    <Text>Broj setova</Text>
+                    <Text>Broj ponavljanja</Text>
+                  </Flex>
+                  <Flex justifyContent="space-around">
+                    <Text>{e.name}</Text>
+                    <Text>{e.sets}</Text>
+                    <Text>{e.reps}</Text>
+                  </Flex>
+                </Box>
+              );
             })}
           </Box>
         )}
