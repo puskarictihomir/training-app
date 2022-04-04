@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,8 +9,10 @@ import axios from "axios";
 import LoggedInNav from "../components/LoggedInNav";
 import LoggedOutNav from "../components/LoggedOutNav";
 
-const TrainingsList = () => {
-  const [trainings, setTrainings] = useState(null);
+const TrainingDetails = () => {
+  const { id } = useParams();
+
+  const [training, setTraining] = useState(null);
 
   let token = "";
 
@@ -24,10 +27,10 @@ const TrainingsList = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/api`, { headers: { Authorization: token } })
+      .get(`${process.env.REACT_APP_BASE_URL}/api/${id}`, { headers: { Authorization: token } })
       .then(function (response) {
-        if (response.status === 200 && response.data?.trainings) {
-          setTrainings(response.data.trainings);
+        if (response.status === 200 && response.data?.training) {
+          setTraining(response.data.training);
         } else {
           toast({
             title: "Something went wrong.",
@@ -52,23 +55,17 @@ const TrainingsList = () => {
     );
   }
 
-  if (trainings) {
+  if (training) {
     return (
       <Box>
         <LoggedInNav />
-        {trainings.length ? (
+        {!!training && (
           <Box>
-            {trainings.map((t, i) => {
-              const date = new Date(t.createdAt);
-              return (
-                <Box key={i}>
-                  <Link to={`/details/${t._id}`}>{date.toDateString("YYYY MM DD HH mm")}</Link>
-                </Box>
-              );
+            {training.exercises.map((e, i) => {
+              const date = new Date(e.createdAt);
+              return <Box key={i}>{e.name}</Box>;
             })}
           </Box>
-        ) : (
-          <Text>No saved trainings</Text>
         )}
       </Box>
     );
@@ -82,4 +79,4 @@ const TrainingsList = () => {
   );
 };
 
-export default TrainingsList;
+export default TrainingDetails;

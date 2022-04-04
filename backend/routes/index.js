@@ -12,4 +12,6 @@ router.post("/register", index.registerUser);
 
 router.post("/login", index.login);
 
+router.get("/:id", getUserDataMiddleware, index.getTraining);
+
 module.exports = router;

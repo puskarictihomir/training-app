@@ -93,3 +93,9 @@ exports.login = async (req, res) => {
     res.send({ errorMessage: "Something went wrong" });
   }
 };
+
+exports.getTraining = async (req, res) => {
+  const training = await Training.findOne({ _id: req.params.id }).populate("exercises");
+
+  res.send({ training });
+};
