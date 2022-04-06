@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
-import { Grid } from "@chakra-ui/react";
+import { Box, Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
+
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const LoggedInNav = () => {
   const deleteToken = () => {
@@ -8,13 +10,26 @@ const LoggedInNav = () => {
   };
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" mb={12}>
-      <Link to="/">Home</Link>
-      <Link to="/create">Add training</Link>
-      <Link onClick={deleteToken} to="/login">
-        Log out
-      </Link>
-    </Grid>
+    <Box textAlign="right">
+      <Menu maxW="150px">
+        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+          Actions
+        </MenuButton>
+        <MenuList>
+          <MenuItem>
+            <Link to="/">Home</Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to="/create">Add training</Link>
+          </MenuItem>
+          <MenuItem>
+            <Link onClick={deleteToken} to="/login">
+              Log out
+            </Link>
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    </Box>
   );
 };
 

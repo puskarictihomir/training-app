@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { Box, useToast, Spinner, Text, Flex, IconButton } from "@chakra-ui/react";
+import { Box, useToast, Spinner, Text, IconButton, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
@@ -78,24 +78,39 @@ const TrainingsList = () => {
         <LoggedInNav />
         {trainings.length ? (
           <Box>
-            {trainings.map((t, i) => {
-              const date = new Date(t.createdAt);
-              return (
-                <Flex alignItems="center" mb={8} key={i}>
-                  <Box mr={4}>
-                    <Link to={`/details/${t._id}`}>{date.toDateString("YYYY MM DD HH mm")}</Link>
-                  </Box>
-
-                  <IconButton
-                    mr={2}
-                    icon={<DeleteIcon />}
-                    colorScheme="red"
-                    onClick={() => handleDeleteExercise(t._id)}
-                  />
-                  <IconButton icon={<EditIcon />} colorScheme="blue" onClick={() => handleEditExercise(t._id)} />
-                </Flex>
-              );
-            })}
+            <Table>
+              <Thead>
+                <Tr>
+                  <Th>Training date</Th>
+                  <Th>Options</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {trainings.map((t, i) => {
+                  const date = new Date(t.createdAt);
+                  return (
+                    <Tr key={i}>
+                      <Td>
+                        <Link to={`/details/${t._id}`}>{date.toDateString("YYYY MM DD HH mm")}</Link>
+                      </Td>
+                      <Td>
+                        <IconButton
+                          mr={2}
+                          icon={<EditIcon />}
+                          colorScheme="blue"
+                          onClick={() => handleEditExercise(t._id)}
+                        />
+                        <IconButton
+                          icon={<DeleteIcon />}
+                          colorScheme="red"
+                          onClick={() => handleDeleteExercise(t._id)}
+                        />
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
           </Box>
         ) : (
           <Text>No saved trainings</Text>
