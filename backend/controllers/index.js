@@ -108,15 +108,11 @@ exports.remove = async (req, res) => {
 
 exports.editTraining = async (req, res) => {
   try {
-    console.log("req.params.id", req.params.id);
     const { exercises, trainingTime } = req.body;
 
     if (!exercises.filter((e) => e.name && e.sets && e.reps).length) {
       return res.status(400).send({ error: "Missing data" });
     }
-
-    console.log("exercises", exercises);
-    console.log("trainingTime", trainingTime);
 
     const exerciseIds = [];
 
@@ -134,7 +130,7 @@ exports.editTraining = async (req, res) => {
         exercises: exerciseIds,
         user: req.user._id,
         startTime: +dayjs(trainingTime.startTime),
-        endTime: Date.now(),
+        updatedAt: Date.now(),
       }
     );
 
