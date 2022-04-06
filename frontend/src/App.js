@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import TrainingForm from "./pages/TrainingForm";
+import NewTraining from "./pages/NewTraining";
 import TrainingsList from "./pages/TrainingsList";
 import RegisterForm from "./pages/RegisterForm";
 import LoginForm from "./pages/LoginForm";
 import TrainingDetails from "./pages/TrainingDetails";
+import EditTraining from "./pages/EditTraining";
 
 import { Box } from "@chakra-ui/react";
 
@@ -14,10 +15,11 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<TrainingsList />} />
-          <Route exact path="/create" element={<TrainingForm />} />
+          <Route exact path="/create" element={<NewTraining />} />
           <Route exact path="/register" element={<RegisterForm />} />
           <Route exact path="/login" element={<LoginForm />} />
           <Route exact path="/details/:id" element={<TrainingDetails />} />
+          <Route exact path="/edit/:id" element={<EditTraining />} />
         </Routes>
       </Router>
     </Box>

@@ -105,3 +105,42 @@ exports.remove = async (req, res) => {
 
   res.send({ id: req.body.id });
 };
+
+exports.editTraining = async (req, res) => {
+  try {
+    console.log("req.params.id", req.params.id);
+    const { exercises, trainingTime } = req.body;
+
+    if (!exercises.filter((e) => e.name && e.sets && e.reps).length) {
+      return res.status(400).send({ error: "Missing data" });
+    }
+
+    console.log("exercises", exercises);
+    console.log("trainingTime", trainingTime);
+
+    const exerciseIds = [];
+
+    for (const e of exercises) {
+      const exercise = await Exercise.create(e);
+
+      if (exercise._id) {
+        exerciseIds.push(exercise._id);
+      }
+    }
+
+    const training = await Training.updateOne(
+      { _id: req.params.id },
+      {
+        exercises: exerciseIds,
+        user: req.user._id,
+        startTime: +dayjs(trainingTime.startTime),
+        endTime: Date.now(),
+      }
+    );
+
+    return res.status(200).send({ msg: "Created training" });
+  } catch (error) {
+    console.error("createTraining", error);
+    res.send({ error: "Something went wrong" });
+  }
+};

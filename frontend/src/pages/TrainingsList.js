@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Box, useToast, Spinner, Text, Flex, IconButton } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 
@@ -23,6 +23,8 @@ const TrainingsList = () => {
 
   const toast = useToast();
 
+  const navigate = useNavigate();
+
   const handleDeleteExercise = (id) => {
     axios
       .delete(`${process.env.REACT_APP_BASE_URL}/api/remove`, {
@@ -34,6 +36,10 @@ const TrainingsList = () => {
         return response.data;
       })
       .catch((err) => console.log(err.message));
+  };
+
+  const handleEditExercise = (id) => {
+    navigate(`/edit/${id}`);
   };
 
   useEffect(() => {
@@ -80,7 +86,13 @@ const TrainingsList = () => {
                     <Link to={`/details/${t._id}`}>{date.toDateString("YYYY MM DD HH mm")}</Link>
                   </Box>
 
-                  <IconButton icon={<DeleteIcon />} colorScheme="red" onClick={() => handleDeleteExercise(t._id)} />
+                  <IconButton
+                    mr={2}
+                    icon={<DeleteIcon />}
+                    colorScheme="red"
+                    onClick={() => handleDeleteExercise(t._id)}
+                  />
+                  <IconButton icon={<EditIcon />} colorScheme="blue" onClick={() => handleEditExercise(t._id)} />
                 </Flex>
               );
             })}

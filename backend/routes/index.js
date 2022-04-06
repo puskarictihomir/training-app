@@ -12,6 +12,8 @@ router.post("/register", index.registerUser);
 
 router.post("/login", index.login);
 
+router.post("/edit/:id", getUserDataMiddleware, index.editTraining);
+
 router.get("/:id", getUserDataMiddleware, index.getTraining);
 
 router.delete("/remove", getUserDataMiddleware, index.remove);

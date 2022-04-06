@@ -9,7 +9,7 @@ import axios from "axios";
 import LoggedInNav from "../components/LoggedInNav";
 import LoggedOutNav from "../components/LoggedOutNav";
 
-const TrainingForm = () => {
+const NewTraining = () => {
   const navigate = useNavigate();
   const [exercises, setExercises] = useState([]);
   const [trainingTime, setTrainingTime] = useState({ startTime: "", endTime: "" });
@@ -167,4 +167,4 @@ const TrainingForm = () => {
   );
 };
 
-export default TrainingForm;
+export default NewTraining;
