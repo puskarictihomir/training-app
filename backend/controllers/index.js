@@ -8,9 +8,14 @@ const dayjs = require("dayjs");
 const { createToken } = require("../utils/createToken");
 
 exports.getTrainings = async (req, res) => {
-  const trainings = await Training.find({ user: req.user._id });
+  const recordsPerPage = +req.query.recordsPerPage;
+  const page = +req.query.page;
+  const skip = (page - 1) * recordsPerPage;
+  const trainings = await Training.find({ user: req.user._id }).skip(skip).limit(recordsPerPage).sort("createdAt");
 
-  res.send({ trainings });
+  const count = await Training.count({ user: req.user._id });
+
+  res.send({ trainings, count });
 };
 
 exports.createTraining = async (req, res) => {
