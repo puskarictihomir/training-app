@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
-import { Box, useToast, Spinner, Text, Flex } from "@chakra-ui/react";
+import { Box, useToast, Spinner, Text, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
 import axios from "axios";
 
@@ -56,29 +55,46 @@ const TrainingDetails = () => {
   }
 
   if (training) {
+    const startTimeMiliseconds = training.startTime; // get your number
+    const startTime = new Date(startTimeMiliseconds).toLocaleTimeString(navigator.language, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const endTimeMiliseconds = training.endTime; // get your number
+    const endTime = new Date(endTimeMiliseconds).toLocaleTimeString(navigator.language, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
     return (
       <Box>
         <LoggedInNav />
-        {!!training && (
-          <Box>
-            {training.exercises.map((e, i) => {
+        <Box mb={4}>
+          <Text>
+            Training duration: {startTime} - {endTime}
+          </Text>
+        </Box>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>Exercise name</Th>
+              <Th>Sets</Th>
+              <Th>Reps</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {training.exercises?.map((e, i) => {
               return (
-                <Box key={i}>
-                  <Flex justifyContent="space-around">
-                    <Text>Ime vježbe</Text>
-                    <Text>Broj setova</Text>
-                    <Text>Broj ponavljanja</Text>
-                  </Flex>
-                  <Flex justifyContent="space-around">
-                    <Text>{e.name}</Text>
-                    <Text>{e.sets}</Text>
-                    <Text>{e.reps}</Text>
-                  </Flex>
-                </Box>
+                <Tr key={i}>
+                  <Td>{e.name}</Td>
+                  <Td>{e.sets}</Td>
+                  <Td>{e.reps}</Td>
+                </Tr>
               );
             })}
-          </Box>
-        )}
+          </Tbody>
+        </Table>
       </Box>
     );
   }

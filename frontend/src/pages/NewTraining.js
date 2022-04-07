@@ -12,7 +12,7 @@ import LoggedOutNav from "../components/LoggedOutNav";
 const NewTraining = () => {
   const navigate = useNavigate();
   const [exercises, setExercises] = useState([]);
-  const [trainingTime, setTrainingTime] = useState({ startTime: "", endTime: "" });
+  const [trainingDuration, setTrainingDuration] = useState("");
 
   let token = "";
 
@@ -40,20 +40,11 @@ const NewTraining = () => {
     setExercises(newExercises);
   };
 
-  const handleTimeChange = (event) => {
-    const { name, value } = event.target;
-
-    setTrainingTime((trainingTime) => ({
-      ...trainingTime,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = () => {
-    if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length || !trainingTime.startTime) {
+    if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length || !trainingDuration) {
       toast({
         title: "Missing exercise data",
-        description: "To save a training, input exercise name, reps, sets i start time.",
+        description: "To save a training, input exercise name, reps, sets and training duration.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -65,7 +56,7 @@ const NewTraining = () => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_URL}/api/create`,
-        { exercises, trainingTime },
+        { exercises, trainingDuration },
         { headers: { Authorization: token } }
       )
       .then(function (response) {
@@ -101,13 +92,13 @@ const NewTraining = () => {
       <LoggedInNav />
       <FormControl>
         <Box mr={4} maxW="220px" mb={4}>
-          <FormLabel htmlFor="startTime">Start time</FormLabel>
+          <FormLabel htmlFor="trainingDuration">Training duration (min)</FormLabel>
           <Input
-            id="startTime"
-            type="datetime-local"
-            name="startTime"
-            value={trainingTime.startTime}
-            onChange={(event) => handleTimeChange(event)}
+            id="trainingDuration"
+            type="number"
+            name="trainingDuration"
+            value={trainingDuration}
+            onChange={(event) => setTrainingDuration(event.target.value)}
           />
         </Box>
 

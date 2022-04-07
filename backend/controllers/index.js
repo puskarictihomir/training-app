@@ -11,7 +11,10 @@ exports.getTrainings = async (req, res) => {
   const recordsPerPage = +req.query.recordsPerPage;
   const page = +req.query.page;
   const skip = (page - 1) * recordsPerPage;
-  const trainings = await Training.find({ user: req.user._id }).skip(skip).limit(recordsPerPage).sort("createdAt");
+  const trainings = await Training.find({ user: req.user._id })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(recordsPerPage);
 
   const count = await Training.count({ user: req.user._id });
 
@@ -20,7 +23,7 @@ exports.getTrainings = async (req, res) => {
 
 exports.createTraining = async (req, res) => {
   try {
-    const { exercises, trainingTime } = req.body;
+    const { exercises, trainingDuration } = req.body;
 
     if (!exercises.filter((e) => e.name && e.sets && e.reps).length) {
       return res.status(400).send({ error: "Missing data" });
@@ -36,11 +39,14 @@ exports.createTraining = async (req, res) => {
       }
     }
 
+    const startTime = Date.now() - +trainingDuration * 60000;
+
     const training = await Training.create({
       exercises: exerciseIds,
       user: req.user._id,
-      startTime: +dayjs(trainingTime.startTime),
+      startTime,
       endTime: Date.now(),
+      trainingDurationInMinutes: +trainingDuration,
     });
 
     return res.status(200).send({ msg: "Created training" });

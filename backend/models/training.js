@@ -17,6 +17,7 @@ const TrainingSchema = new Schema({
   endTime: Number,
   createdAt: { type: Number, default: () => Date.now() },
   updatedAt: Number,
+  trainingDurationInMinutes: Number,
 });
 
 module.exports = mongoose.model("Training", TrainingSchema);
