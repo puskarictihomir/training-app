@@ -9,6 +9,9 @@ const UserSchema = new Schema({
   password: String,
   token: String,
   createdAt: { type: Number, default: () => Date.now() },
+  fullName: String,
+  dateOfBirth: Number,
+  updatedAt: Number,
 });
 
 UserSchema.pre("save", function (next) {

@@ -140,14 +140,38 @@ exports.editTraining = async (req, res) => {
       {
         exercises: exerciseIds,
         user: req.user._id,
-        startTime: +dayjs(trainingTime.startTime),
         updatedAt: Date.now(),
       }
     );
 
-    return res.status(200).send({ msg: "Created training" });
+    return res.status(200).send({ msg: "Updated training" });
   } catch (error) {
-    console.error("createTraining", error);
+    console.error("editTraining", error);
+    res.send({ error: "Something went wrong" });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  res.send({ user: req.user });
+};
+
+exports.editUser = async (req, res) => {
+  try {
+    const { fullName, dateOfBirth } = req.body;
+
+    const user = await User.updateOne(
+      { _id: req.user._id },
+      {
+        fullName,
+        user: req.user._id,
+        dateOfBirth: new Date(dateOfBirth),
+        updatedAt: Date.now(),
+      }
+    );
+
+    return res.send({ msg: "Updated user" });
+  } catch (error) {
+    console.error("editUser", error);
     res.send({ error: "Something went wrong" });
   }
 };

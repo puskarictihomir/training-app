@@ -23,6 +23,9 @@ const LoggedInNav = () => {
             <Link to="/create">Add training</Link>
           </MenuItem>
           <MenuItem>
+            <Link to="/profile">Profile</Link>
+          </MenuItem>
+          <MenuItem>
             <Link onClick={deleteToken} to="/login">
               Log out
             </Link>
