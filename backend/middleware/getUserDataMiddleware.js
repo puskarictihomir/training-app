@@ -9,7 +9,7 @@ async function getUserDataMiddleware(req, res, next) {
     return res.send({ statusCode: 404 });
   }
 
-  req.user = user;
+  req.user = { _id: user._id, fullName: user.fullName, username: user.username, dateOfBirth: user.dateOfBirth };
 
   next();
 }
