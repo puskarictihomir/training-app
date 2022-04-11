@@ -19,13 +19,11 @@ const UserForm = ({ user, detailsPage = false }) => {
     }
 
     if (user?.dateOfBirth) {
-      const fullDate = new Date(user.dateOfBirth);
-
       const date = new Date(user.dateOfBirth);
 
-      console.log("date", date);
+      const formatedDate = dayjs(date).format("YYYY-MM-DD");
 
-      setDateOfBirth(dateOfBirth);
+      setDateOfBirth(formatedDate);
     }
   }, [user]);
 
