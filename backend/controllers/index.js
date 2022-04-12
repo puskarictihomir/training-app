@@ -159,6 +159,24 @@ exports.editUser = async (req, res) => {
   try {
     const { fullName, dateOfBirth } = req.body;
 
+    const imageString = createToken();
+
+    let image = req.user.image || "";
+
+    if (req.files && req.files.profileImage) {
+      const file = req.files.profileImage;
+      const fileExtension = file.name.split(".").pop();
+      const path = __dirname + "/../../public/images/" + imageString + "." + fileExtension;
+
+      file.mv(path, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+
+      image = imageString + "." + fileExtension;
+    }
+
     const user = await User.updateOne(
       { _id: req.user._id },
       {
@@ -166,6 +184,7 @@ exports.editUser = async (req, res) => {
         user: req.user._id,
         dateOfBirth: new Date(dateOfBirth),
         updatedAt: Date.now(),
+        image,
       }
     );
 

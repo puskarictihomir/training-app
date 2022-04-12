@@ -25,6 +25,10 @@ const UserForm = ({ user, detailsPage = false }) => {
 
       setDateOfBirth(formatedDate);
     }
+
+    if (user?.image) {
+      setProfileImage(user.image);
+    }
   }, [user]);
 
   let token = "";
@@ -50,13 +54,19 @@ const UserForm = ({ user, detailsPage = false }) => {
     setProfileImage(e.target.files[0]);
   };
 
-  const handleSubmit = () => {
-    axios
-      .post(
-        `${process.env.REACT_APP_BASE_URL}/api/user/edit`,
-        { fullName, dateOfBirth },
-        { headers: { Authorization: token } }
-      )
+  const handleSubmit = (e) => {
+    var formData = new FormData();
+
+    formData.append("fullName", fullName);
+    formData.append("dateOfBirth", dateOfBirth);
+    formData.append("profileImage", profileImage);
+
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_BASE_URL}/api/user/edit`,
+      data: formData,
+      headers: { Authorization: token, "Content-Type": "multipart/form-data" },
+    })
       .then(function (response) {
         if (response.status === 200) {
           navigate("/profile");
@@ -80,17 +90,17 @@ const UserForm = ({ user, detailsPage = false }) => {
     <Box maxW="500px">
       {!detailsPage ? (
         <Box mb={4}>
-          <FormLabel htmlFor="image">Image</FormLabel>
+          <FormLabel htmlFor="profileImage">Image</FormLabel>
           <Input
-            id="image"
-            name="image"
+            id="profileImage"
+            name="profileImage"
             type="file"
             onChange={(event) => handleImageChange(event)}
             isDisabled={detailsPage ? true : false}
           />
         </Box>
       ) : (
-        <Image />
+        <Image src={profileImage ? require(`../../../public/images/${profileImage}`) : ""} />
       )}
       <Box mb={4}>
         <FormLabel htmlFor="fullName">Full name</FormLabel>
@@ -114,7 +124,7 @@ const UserForm = ({ user, detailsPage = false }) => {
           isDisabled={detailsPage ? true : false}
         />
       </Box>
-      <Button isDisabled={fullName.length && dateOfBirth ? false : true} colorScheme="blue" onClick={handleSubmit}>
+      <Button isDisabled={detailsPage} colorScheme="blue" onClick={handleSubmit}>
         Save
       </Button>
     </Box>

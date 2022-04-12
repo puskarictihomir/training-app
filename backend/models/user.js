@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   fullName: String,
   dateOfBirth: Number,
   updatedAt: Number,
+  image: String,
 });
 
 UserSchema.pre("save", function (next) {

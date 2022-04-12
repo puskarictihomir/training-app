@@ -1,9 +1,11 @@
 require("dotenv").config();
 
 const express = require("express");
+const fileUpload = require("express-fileupload");
 const app = express();
 const server = require("http").createServer(app);
 const PORT = 4001;
+const path = require("path");
 
 const mongoose = require("mongoose");
 
@@ -21,7 +23,11 @@ app.use(function (req, res, next) {
 
 app.use(cors());
 
+app.use(fileUpload());
+
 app.use("/api", indexRouter);
+
+app.use("/images", express.static(path.join(__dirname, "./public/images")));
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
