@@ -9,21 +9,10 @@ import axios from "axios";
 import LoggedInNav from "../components/LoggedInNav";
 import LoggedOutNav from "../components/LoggedOutNav";
 
-const TrainingForm = ({ training = null, edit = false }) => {
+const NewTraining = ({ training = "", edit = false }) => {
   const navigate = useNavigate();
   const [exercises, setExercises] = useState([]);
-  const [trainingTime, setTrainingTime] = useState({ startTime: "", endTime: "" });
-
-  useEffect(() => {
-    if (training) {
-      const exercisesCopy = training.exercises.map((e) => {
-        return { name: e.name, reps: e.reps, sets: e.sets };
-      });
-
-      setExercises(exercisesCopy);
-      setTrainingTime({ startTime: new Date(training.startTime), endTime: training.endTime });
-    }
-  }, [training]);
+  const [trainingDuration, setTrainingDuration] = useState("");
 
   let token = "";
 
@@ -35,6 +24,17 @@ const TrainingForm = ({ training = null, edit = false }) => {
   }
 
   const toast = useToast();
+
+  useEffect(() => {
+    if (training) {
+      const exercisesCopy = training.exercises.map((e) => {
+        return { name: e.name, reps: e.reps, sets: e.sets };
+      });
+
+      setExercises(exercisesCopy);
+      setTrainingDuration(training.trainingDurationInMinutes);
+    }
+  }, [training]);
 
   const handleAddExercise = () => {
     setExercises([...exercises, { name: "", sets: "", reps: "" }]);
@@ -51,20 +51,11 @@ const TrainingForm = ({ training = null, edit = false }) => {
     setExercises(newExercises);
   };
 
-  const handleTimeChange = (event) => {
-    const { name, value } = event.target;
-
-    setTrainingTime((trainingTime) => ({
-      ...trainingTime,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = () => {
-    if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length || !trainingTime.startTime) {
+    if (exercises.filter((e) => !e.name || !e.sets || !e.reps).length || !trainingDuration) {
       toast({
         title: "Missing exercise data",
-        description: "To save a training, input exercise name, reps, sets i start time.",
+        description: "To save a training, input exercise name, reps, sets and training duration.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -78,7 +69,7 @@ const TrainingForm = ({ training = null, edit = false }) => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_URL}/api/${routeEnding}`,
-        { exercises, trainingTime },
+        { exercises, trainingDuration },
         { headers: { Authorization: token } }
       )
       .then(function (response) {
@@ -114,13 +105,13 @@ const TrainingForm = ({ training = null, edit = false }) => {
       <LoggedInNav />
       <FormControl>
         <Box mr={4} maxW="220px" mb={4}>
-          <FormLabel htmlFor="startTime">Start time</FormLabel>
+          <FormLabel htmlFor="trainingDuration">Training duration (min)</FormLabel>
           <Input
-            id="startTime"
-            type="datetime-local"
-            name="startTime"
-            value={trainingTime.startTime}
-            onChange={(event) => handleTimeChange(event)}
+            id="trainingDuration"
+            type="number"
+            name="trainingDuration"
+            value={trainingDuration}
+            onChange={(event) => setTrainingDuration(event.target.value)}
           />
         </Box>
 
@@ -180,4 +171,4 @@ const TrainingForm = ({ training = null, edit = false }) => {
   );
 };
 
-export default TrainingForm;
+export default NewTraining;
